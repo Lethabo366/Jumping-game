@@ -10,3 +10,21 @@
     margin-top: 250px;
     border-bottom: 5px solid black; 
 }
+
+#sky_obstacle {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 40px;
+    right: 0px;
+    transform: rotate(90deg);
+}
+
+#ground_obstacle {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 0;
+    right: 0px;
+    /* transform: rotate(90deg); */
+}

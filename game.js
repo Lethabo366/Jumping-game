@@ -1,7 +1,14 @@
 
 let isJumping = false;
 let bottomPosition = 0;
+let rightPosition = 0;
+
 let goingUp = true;
+let start = false;
+let groundOrSky = null;
+
+let speed = 3;
+
 
 const player = document.querySelector('#player');
 
@@ -16,15 +23,44 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+function obstacleMovement() {
+    const groundObstacle = document.querySelector('#ground_obstacle');
+    const skyObstacle = document.querySelector('#sky_obstacle');
+
+    if (start) {
+        rightPosition += speed;
+
+        if(rightPosition >= 315) {
+            start = false;
+        }
+
+        if (groundOrSky === 0) {
+            groundObstacle.style.right = `${rightPosition}px`;
+        } else if (groundOrSky === 1) {
+            skyObstacle.style.right = `${rightPosition}px`;
+        } 
+    }
+
+    if(rightPosition > 0) {
+        requestAnimationFrame(obstacleMovement);
+    } 
+    else {
+        rightPosition = 0;
+        start = true;
+        requestAnimationFrame(obstacleMovement);
+    }
+
+}
+
 function jump() {
     if (goingUp) {
-        bottomPosition += 3;
+        bottomPosition += speed;
 
         if (bottomPosition >= 30) {
             goingUp = false;
         }
     } else {
-        bottomPosition -= 3;
+        bottomPosition -= speed;
     }
 
     player.style.bottom = `${bottomPosition}px`;
@@ -40,8 +76,8 @@ function jump() {
 }
 
 
-
-
+ groundOrSky = Math.floor(Math.random() * 2);
+obstacleMovement();
 
 
 // let isJumping = false;
