@@ -12,19 +12,21 @@
 }
 
 #sky_obstacle {
+    /* display:none; */
     position: absolute;
     width: 30px;
     height: 30px;
-    bottom: 40px;
+    bottom: 50px;
     right: 0px;
     transform: rotate(90deg);
 }
 
 #ground_obstacle {
+    /* display:none; */
     position: absolute;
     width: 30px;
     height: 30px;
     bottom: 0;
     right: 0px;
-    /* transform: rotate(90deg); */
+
 }

@@ -1,24 +1,23 @@
-
-let isJumping = false;
+﻿let isJumping = false;
 let bottomPosition = 0;
 let rightPosition = 0;
+let jumpVelocity = 0;
+let obstacleCleared = false;
 
-let goingUp = true;
 let start = false;
 let groundOrSky = null;
 
+const gravity = 0.8;
+const jumpStrength = 12;
 let speed = 3;
-
+let gameOver = false;
+let obstaclesDodged = 0;
 
 const player = document.querySelector('#player');
 
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space' && !isJumping) {
         event.preventDefault();
-
-        isJumping = true;
-        goingUp = true;
-
         jump();
     }
 });
@@ -26,104 +25,127 @@ document.addEventListener('keydown', (event) => {
 function obstacleMovement() {
     const groundObstacle = document.querySelector('#ground_obstacle');
     const skyObstacle = document.querySelector('#sky_obstacle');
+    const ground = document.querySelector('#ground');
+
+    const obstacle = groundOrSky === 0 ? groundObstacle : skyObstacle;
+
+    groundObstacle.style.visibility = groundOrSky === 0 ? 'visible' : 'hidden';
+    skyObstacle.style.visibility = groundOrSky === 1 ? 'visible' : 'hidden';
 
     if (start) {
         rightPosition += speed;
+        obstacle.style.right = `${rightPosition}px`;
+    }
 
-        if(rightPosition >= 315) {
-            start = false;
+    const groundRect = ground.getBoundingClientRect();
+    const obstacleRect = obstacle.getBoundingClientRect();
+    const playerRect = player.getBoundingClientRect();
+
+    if (!obstacleCleared && obstacleRect.right <= playerRect.left) {
+        obstacleCleared = true;
+        obstaclesDodged += 1;
+
+        if (obstaclesDodged % 6 === 0) {
+            speed += 1;
         }
 
-        if (groundOrSky === 0) {
-            groundObstacle.style.right = `${rightPosition}px`;
-        } else if (groundOrSky === 1) {
-            skyObstacle.style.right = `${rightPosition}px`;
-        } 
+        updateObstacle();
+        return;
     }
 
-    if(rightPosition > 0) {
-        requestAnimationFrame(obstacleMovement);
-    } 
-    else {
+    if (obstacleRect.right <= groundRect.left) {
         rightPosition = 0;
+        obstacle.style.right = '0px';
         start = true;
-        requestAnimationFrame(obstacleMovement);
+        obstacleCleared = false;
+    }
+}
+
+function updateObstacle() {
+    groundOrSky = Math.floor(Math.random() * 2);
+    rightPosition = 0;
+
+    const groundObstacle = document.querySelector('#ground_obstacle');
+    const skyObstacle = document.querySelector('#sky_obstacle');
+    const obstacle = groundOrSky === 0 ? groundObstacle : skyObstacle;
+
+    groundObstacle.style.visibility = groundOrSky === 0 ? 'visible' : 'hidden';
+    skyObstacle.style.visibility = groundOrSky === 1 ? 'visible' : 'hidden';
+    obstacle.style.right = '0px';
+    start = true;
+}
+
+function checkCollision() {
+    const groundObstacle = document.querySelector('#ground_obstacle');
+    const skyObstacle = document.querySelector('#sky_obstacle');
+
+    const obstacle = groundOrSky === 0 ? groundObstacle : skyObstacle;
+    const playerRect = player.getBoundingClientRect();
+    const obstacleRect = obstacle.getBoundingClientRect();
+
+    if (
+        playerRect.right > obstacleRect.left &&
+        playerRect.left < obstacleRect.right &&
+        playerRect.bottom > obstacleRect.top &&
+        playerRect.top < obstacleRect.bottom
+    ) {
+        return true;
     }
 
+    return false;
+}
+
+function gameStart() {
+    if (gameOver) {
+        return;
+    }
+
+    start = true;
+    updateObstacle();
+    gameLoop();
+}
+
+function gameLoop() {
+    if (gameOver) {
+        return;
+    }
+
+    obstacleMovement();
+
+    if (checkCollision()) {
+        gameOver = true;
+        console.log('Game Over');
+        return;
+    }
+
+    requestAnimationFrame(gameLoop);
 }
 
 function jump() {
-    if (goingUp) {
-        bottomPosition += speed;
-
-        if (bottomPosition >= 30) {
-            goingUp = false;
+    isJumping = true;
+    jumpVelocity = jumpStrength;
+ 
+    function animateJump() {
+        if (!isJumping) {
+            return;
         }
-    } else {
-        bottomPosition -= speed;
+
+        jumpVelocity -= gravity;
+        bottomPosition += jumpVelocity;
+
+        if (bottomPosition <= 0) {
+            bottomPosition = 0;
+            jumpVelocity = 0;
+            isJumping = false;
+            player.style.bottom = '0px';
+            return;
+        }
+
+        player.style.bottom = `${bottomPosition}px`;
+        requestAnimationFrame(animateJump);
     }
 
-    player.style.bottom = `${bottomPosition}px`;
-
-    if (bottomPosition > 0) {
-        requestAnimationFrame(jump);
-    } else {
-        bottomPosition = 0;
-        player.style.bottom = '0px';
-        isJumping = false;
-        console.log('Land!');
-    }
+    animateJump();
 }
 
-
- groundOrSky = Math.floor(Math.random() * 2);
-obstacleMovement();
-
-
-// let isJumping = false;
-
-// document.addEventListener('keypress', (event) => {
-//     if (event.code === 'Space' ) {
-//         isJumping = true;
-//         for(let i = 0; i < 30; i++) {
-//             document.querySelector('#player').style.bottom = `${i}px`;
-//         }
-//     } 
-// })
-
-// document.addEventListener('keyup', (event) => {
-//     if (event.code === 'Space') {
-
-//           for(let i = 30; i > 0; i--) {
-//             document.querySelector('#player').style.bottom = `${i}px`;
-//         }
-//         document.querySelector('#player').style.bottom = '0px ';
-//         console.log('Land!');
-//     }
-// })
-
-// let count = 0;
-
-// function increaseCount() {
-//     count++;
-
-//     console.log(count);
-
-//     if (count < 5) {
-//         requestAnimationFrame(increaseCount);
-//     }
-// }
-
-// requestAnimationFrame(increaseCount);
-
-// document.addEventListener("keydown", (event) => {
-//     if (event.code === "Space") {
-//         console.log("Jump!");
-//     }
-// });
- 
-// function handleInput () {
- 
-// }
-
-// handleInput()
+gameStart();
