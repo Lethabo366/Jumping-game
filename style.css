@@ -1,32 +1,284 @@
-#player {
-   position: absolute;
-    width:50px;
-    height:50px;
-    bottom:0;
+* {
+    box-sizing: border-box;
 }
 
-#ground { 
-    position : relative; 
-    margin-top: 250px;
-    border-bottom: 5px solid black; 
+:root {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #172033;
+    background: #eef3f9;
 }
 
-#sky_obstacle {
-    /* display:none; */
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+.game-shell {
+    width: min(900px, 100%);
+    padding: 26px;
+    border: 1px solid #dce5f0;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 18px 55px rgba(29, 48, 78, 0.12);
+}
+
+.game-header,
+.game-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.eyebrow {
+    margin: 0 0 5px;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 2.3rem);
+}
+
+.instructions {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 0.92rem;
+}
+
+kbd {
+    padding: 2px 7px;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 0.85em;
+}
+
+.score-panel {
+    display: flex;
+    gap: 12px;
+}
+
+.score-panel div {
+    min-width: 76px;
+    padding: 10px 13px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    text-align: center;
+}
+
+.score-panel span,
+.score-panel strong {
+    display: block;
+}
+
+.score-panel span {
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.score-panel strong {
+    margin-top: 3px;
+    font-size: 1.35rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.game-area {
+    position: relative;
+    height: 300px;
+    margin: 25px 0 18px;
+    overflow: hidden;
+    border: 1px solid #d7e5f2;
+    border-radius: 15px;
+    background: linear-gradient(180deg, #dff3ff 0%, #f4fbff 72%, #e7f5df 72%, #e7f5df 100%);
+    outline: none;
+    isolation: isolate;
+}
+
+.game-area:focus-visible {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.sky-decoration {
     position: absolute;
-    width: 30px;
-    height: 30px;
-    bottom: 50px;
-    right: 0px;
-    transform: rotate(90deg);
+    inset: 0 0 28%;
+    opacity: 0.45;
+    background:
+        radial-gradient(ellipse at 18% 35%, #fff 0 7%, transparent 7.5%),
+        radial-gradient(ellipse at 23% 35%, #fff 0 5%, transparent 5.5%),
+        radial-gradient(ellipse at 78% 20%, #fff 0 6%, transparent 6.5%),
+        radial-gradient(ellipse at 83% 20%, #fff 0 4%, transparent 4.5%);
+    pointer-events: none;
+}
+
+#player,
+#ground_obstacle,
+#sky_obstacle {
+    position: absolute;
+    display: block;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+#player {
+    z-index: 3;
+    left: 7%;
+    bottom: 10px;
+    width: 66px;
+    height: 78px;
 }
 
 #ground_obstacle {
-    /* display:none; */
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    bottom: 0;
-    right: 0px;
+    z-index: 2;
+    right: 0;
+    bottom: 8px;
+    width: 58px;
+    height: 62px;
+    visibility: hidden;
+}
 
+#sky_obstacle {
+    z-index: 2;
+    right: 0;
+    bottom: 112px;
+    width: 58px;
+    height: 68px;
+    visibility: hidden;
+}
+
+.ground-line {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 9px;
+    border-top: 2px solid #85b86d;
+    background: repeating-linear-gradient(90deg, #b7d99e 0 18px, #a9d18e 18px 36px);
+}
+
+.overlay {
+    position: absolute;
+    z-index: 5;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.48);
+    color: #fff;
+    text-align: center;
+}
+
+.overlay[hidden] {
+    display: none;
+}
+
+.overlay h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.overlay p {
+    margin: 9px 0 18px;
+}
+
+#start-button,
+.jump-button {
+    border: 0;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 800;
+}
+
+#start-button {
+    padding: 11px 20px;
+}
+
+#start-button:hover,
+.jump-button:hover {
+    background: #1d4ed8;
+}
+
+.game-footer {
+    min-height: 44px;
+}
+
+#game-status {
+    margin-right: auto;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.secondary-button {
+    padding: 9px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #fff;
+    color: #334155;
+    font-weight: 700;
+}
+
+.jump-button {
+    min-width: 86px;
+    padding: 10px 16px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .game-shell {
+        padding: 17px;
+        border-radius: 16px;
+    }
+
+    .game-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .game-area {
+        height: 260px;
+        margin-top: 18px;
+    }
+
+    #player {
+        left: 7%;
+        width: 58px;
+        height: 70px;
+    }
+
+    #ground_obstacle {
+        width: 52px;
+        height: 56px;
+    }
+
+    #sky_obstacle {
+        width: 52px;
+        height: 62px;
+        bottom: 105px;
+    }
+
+    .game-footer {
+        flex-wrap: wrap;
+    }
 }

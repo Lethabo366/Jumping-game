@@ -3,16 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Jumping Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="ground">
-        <img id="player" src="https://tse1.mm.bing.net/th/id/OIP.w4IqIEAwhi3LS4CJfImM_QHaHk?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Player">
-        <img id="ground_obstacle" src="https://static.vecteezy.com/system/resources/previews/021/680/070/non_2x/cartoon-mountain-rock-clip-art-free-png.png" alt="Ground Obstacle">
-        <img id="sky_obstacle" src="https://www.pngall.com/wp-content/uploads/15/Cartoon-Fire-PNG.png" alt="Sky Obstacle">
-    </div>
+    <main class="game-shell">
+        <header class="game-header">
+            <div>
+                <p class="eyebrow">ARCADE GAME</p>
+                <h1>Jump Runner</h1>
+                <p class="instructions">Press <kbd>Space</kbd> or <kbd>↑</kbd> to jump. Avoid the obstacles.</p>
+            </div>
+            <div class="score-panel" aria-live="polite">
+                <div><span>Score</span><strong id="score">0</strong></div>
+                <div><span>Best</span><strong id="best-score">0</strong></div>
+            </div>
+        </header>
 
+        <section id="ground" class="game-area" aria-label="Jump Runner game area" tabindex="0">
+            <div class="sky-decoration" aria-hidden="true"></div>
+            <img id="player"
+                 src="https://tse1.mm.bing.net/th/id/OIP.w4IqIEAwhi3LS4CJfImM_QHaHk?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+                 alt="Player">
+            <img id="ground_obstacle"
+                 src="https://static.vecteezy.com/system/resources/previews/021/680/070/non_2x/cartoon-mountain-rock-clip-art-free-png.png"
+                 alt="Ground obstacle">
+            <img id="sky_obstacle"
+                 src="https://www.pngall.com/wp-content/uploads/15/Cartoon-Fire-PNG.png"
+                 alt="Flying fire obstacle">
+
+            <div class="ground-line" aria-hidden="true"></div>
+            <div id="overlay" class="overlay">
+                <h2 id="overlay-title">Ready to run?</h2>
+                <p id="overlay-message">Jump over rocks and avoid the fire.</p>
+                <button id="start-button" type="button">Start game</button>
+            </div>
+        </section>
+
+        <footer class="game-footer">
+            <span id="game-status" role="status">Ready</span>
+            <button id="restart-button" class="secondary-button" type="button">Restart</button>
+            <button id="jump-button" class="jump-button" type="button" aria-label="Jump">JUMP</button>
+        </footer>
+    </main>
+    <script src="game.js"></script>
 </body>
-<script src="game.js"></script>
 </html>
