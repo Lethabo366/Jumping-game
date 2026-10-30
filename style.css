@@ -1,0 +1,32 @@
+#player {
+   position: absolute;
+    width:50px;
+    height:50px;
+    bottom:0;
+}
+
+#ground { 
+    position : relative; 
+    margin-top: 250px;
+    border-bottom: 5px solid black; 
+}
+
+#sky_obstacle {
+    /* display:none; */
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 50px;
+    right: 0px;
+    transform: rotate(90deg);
+}
+
+#ground_obstacle {
+    /* display:none; */
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 0;
+    right: 0px;
+
+}
